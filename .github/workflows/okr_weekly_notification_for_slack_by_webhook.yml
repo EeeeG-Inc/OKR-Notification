@@ -52,4 +52,4 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }}" ${{ github.event.inputs.quarter_id }}"
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.evenbt.inputs.year }} ${{ github.event.inputs.quarter_id }}

@@ -53,4 +53,4 @@ jobs:
           CHANNEL_ID_DEFAULT: ${{ secrets.CHANNEL_ID_DEFAULT }}
           CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION: ${{ secrets.CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_api.py ${{ github.event.inputs.year }}" ${{ github.event.inputs.quarter_id }}"
+        run: python okr_weekly_notification_for_slack_by_api.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }}
