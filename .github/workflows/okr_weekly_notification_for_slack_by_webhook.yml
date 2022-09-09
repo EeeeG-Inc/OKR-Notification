@@ -1,0 +1,55 @@
+name: okr_weekly_notification_for_slack_by_webhook
+
+# トリガーイベント
+on:
+  # 1. main ブランチへのプッシュ: 通知がうざいから停止中
+  # push:
+  #   branches:
+  #     - main
+  # 2. GitHub 上の手動実行
+  workflow_dispatch:
+    inputs:
+      year:
+        type: choice
+        description: year
+        required: true
+        options:
+        - '2022'
+        - '2021'
+      quarter_id:
+        type: choice
+        description: quarter_id
+        required: true
+        options:
+        - '1'
+        - '2'
+        - '3'
+        - '4'
+        - '5'
+  # 3. crontab
+  schedule:
+    # 日-木 22:00 (UTC) -> 月-金 8:00 (JST)
+    - cron: "0 22 * * *"
+
+jobs:
+  okr_weekly_notification_for_slack_by_webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+          architecture: "x64"
+      - name: Get Python version
+        run: python -V
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run okr_weekly_notification_for_slack_by_webhook.py
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
+          WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
+          IS_DEBUG: ${{ secrets.IS_DEBUG }}
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }}" ${{ github.event.inputs.quarter_id }}"
