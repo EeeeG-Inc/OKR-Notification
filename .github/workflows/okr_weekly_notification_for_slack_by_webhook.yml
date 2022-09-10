@@ -1,12 +1,6 @@
 name: okr_weekly_notification_for_slack_by_webhook
 
-# トリガーイベント
 on:
-  # 1. main ブランチへのプッシュ: 通知がうざいから停止中
-  # push:
-  #   branches:
-  #     - main
-  # 2. GitHub 上の手動実行
   workflow_dispatch:
     inputs:
       year:
@@ -41,10 +35,6 @@ on:
         - '9'
         - '10'
         - '11'
-  # 3. crontab
-  schedule:
-    # 日-木 22:00 (UTC) -> 月-金 8:00 (JST)
-    - cron: "0 22 * * *"
 
 jobs:
   okr_weekly_notification_for_slack_by_webhook:

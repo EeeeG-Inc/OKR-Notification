@@ -1,12 +1,6 @@
 name: okr_weekly_notification_for_slack_by_api
 
-# トリガーイベント
 on:
-  # 1. main ブランチへのプッシュ: 通知がうざいから停止中
-  # push:
-  #   branches:
-  #     - main
-  # 2. GitHub 上の手動実行
   workflow_dispatch:
     inputs:
       year:
@@ -26,10 +20,9 @@ on:
         - '3'
         - '4'
         - '5'
-  # 3. crontab
   schedule:
-    # 日-木 22:00 (UTC) -> 月-金 8:00 (JST)
-    - cron: "0 22 * * *"
+    # 火 0:00 (UTC) -> 火 10:00 (JST)
+    - cron: "0 0 * * 1"
 
 jobs:
   okr_weekly_notification_for_slack_by_api:
@@ -53,4 +46,5 @@ jobs:
           CHANNEL_ID_DEFAULT: ${{ secrets.CHANNEL_ID_DEFAULT }}
           CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION: ${{ secrets.CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_api.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }}
+        # schedule でトリガーされたときはデフォルト値が渡される
+        run: python okr_weekly_notification_for_slack_by_api.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }}
