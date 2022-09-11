@@ -46,16 +46,16 @@ class MyOkr():
     Notion に貼り付けるとインラインデータベースになる Markdown テーブル書式のテキストを作成
     is_plaintext を True にすると、Slack 通知用の形式で取得できる
     """
-    def get_str_okr_for_webhook(self, name, objective, is_plaintext=False):
+    def get_str_okr_for_webhook(self, name, objective, is_more_detail=False, is_plaintext=False):
         if not objective:
             return None
 
         texts = {
-            self.config.NOTION: self.init_text_for_webhook(name, is_plaintext, self.config.NOTION),
+            self.config.NOTION: self.init_text_for_webhook(name, is_plaintext, self.config.NOTION, is_more_detail),
         }
 
         for o in objective:
-            texts = self.add_objective_to_text_for_webhook(o, texts)
+            texts = self.add_objective_to_text_for_webhook(o, texts, is_more_detail)
 
         return self.end_text_for_webhook(texts, is_plaintext)
 
@@ -63,9 +63,9 @@ class MyOkr():
     Notion に貼り付けるとインラインデータベースになる Markdown テーブル書式のテキストを作成
     is_plaintext を True にすると、Slack 通知用の形式で取得できる
     """
-    def get_str_okr_for_api(self, objectives):
+    def get_str_okr_for_api(self, objectives, is_more_detail=False):
         texts = {
-            self.config.NOTION: self.init_text_for_api(self.config.NOTION),
+            self.config.NOTION: self.init_text_for_api(self.config.NOTION, is_more_detail),
         }
 
         for name, objective in objectives.items():
@@ -73,7 +73,7 @@ class MyOkr():
                 continue
 
             for o in objective:
-                texts = self.add_objective_to_text_for_api(name, o, texts)
+                texts = self.add_objective_to_text_for_api(name, o, texts, is_more_detail)
 
         return texts
 
@@ -135,9 +135,9 @@ class MyOkr():
         }))
 
     """
-    get_str_assignee_tasks のメッセージ初期化
+    メッセージ初期化
     """
-    def init_text_for_webhook(self, name, is_plaintext, target):
+    def init_text_for_webhook(self, name, is_plaintext, target, is_more_detail):
         text = ''
 
         if is_plaintext:
@@ -145,44 +145,58 @@ class MyOkr():
             text += '```'
 
         if target == self.config.NOTION:
-            text += '|Year|Quarter|Priority|Objective (Score)|Key Result1 (Score)|Key Result2 (Score)|Key Result3 (Score)|Comments|\n'
-            text += '|:-|:-|:-|:-|:-|:-|:-|:-|\n'
+            if is_more_detail:
+                text += '|Year|Quarter|Priority|Objective (Score)|Remarks|Impression|Key Result1 (Score)|Remarks1|Impression1|Key Result2 (Score)|Remarks2|Impression2|Key Result3 (Score)|Remarks3|Impression3|Comments|\n'
+                text += '|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|\n'
+            else:
+                text += '|Year|Quarter|Priority|Objective (Score)|Key Result1 (Score)|Key Result2 (Score)|Key Result3 (Score)|Comments|\n'
+                text += '|:-|:-|:-|:-|:-|:-|:-|:-|\n'
 
         return text
 
     """
-    get_str_assignee_tasks のメッセージ初期化
+    メッセージ初期化
     """
-    def init_text_for_api(self, target):
+    def init_text_for_api(self, target, is_more_detail):
         text = ''
 
         if target == self.config.NOTION:
-            text += '|Name|Year|Quarter|Priority|Objective (Score)|Key Result1 (Score)|Key Result2 (Score)|Key Result3 (Score)|Comments|\n'
-            text += '|:-|:-|:-|:-|:-|:-|:-|:-|:-|\n'
+            if is_more_detail:
+                text += '|Name|Year|Quarter|Priority|Objective (Score)|Remarks|Impression|Key Result1 (Score)|Remarks1|Impression1|Key Result2 (Score)|Remarks2|Impression2|Key Result3 (Score)|Remarks3|Impression3|Comments|\n'
+                text += '|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|\n'
+            else:
+                text += '|Name|Year|Quarter|Priority|Objective (Score)|Key Result1 (Score)|Key Result2 (Score)|Key Result3 (Score)|Comments|\n'
+                text += '|:-|:-|:-|:-|:-|:-|:-|:-|:-|\n'
 
         return text
 
     """
-    get_str_assignee_tasks のメッセージにタスク追加
+    Objective の情報をテキスト追加する
     """
-    def add_objective_to_text_for_webhook(self, objective, texts):
+    def add_objective_to_text_for_webhook(self, objective, texts, is_more_detail):
         objective_title = ''.join(objective['objective'].splitlines())
         objective_title = f"[{objective_title}]({self.config.base_url}/key_result?objective_id={objective['id']})"
-
-        str_key_results = [
-            '--- (x.x)', '--- (x.x)', '--- (x.x)',
-        ]
+        str_objective_remarks = '' if objective['remarks'] is None else ''.join(objective['remarks'].splitlines())
+        str_objective_impression = '' if objective['impression'] is None else ''.join(objective['impression'].splitlines())
+        str_key_results = ['', '', '']
+        str_key_result_remarks = ['', '', '']
+        str_key_result_impressions = ['', '', '']
         for index, key_result in enumerate(objective['key_results']):
             k = key_result['key_result']
             s = key_result['score']
+            r = key_result['remarks']
+            i = key_result['impression']
 
             if (k is None) and (s == 0):
                 continue
 
-            if k is not None:
-                k = ''.join(k.splitlines())
+            k = '' if k is None else ''.join(k.splitlines())
+            r = '' if r is None else ''.join(r.splitlines())
+            i = '' if i is None else ''.join(i.splitlines())
 
             str_key_results[index] = f"{k} ({key_result['score']})"
+            str_key_result_remarks[index] = f"{r}"
+            str_key_result_impressions[index] = f"{i}"
 
         comment = ''
         count = 1
@@ -193,39 +207,65 @@ class MyOkr():
                 comment += ''.join(c['comment'].splitlines())
             count += 1
 
-        texts[self.config.NOTION] += f"|{objective['year']}" + \
-            f"|{objective['quarter']}" + \
-            f"|{objective['priority']}" + \
-            f"|{objective_title} ({objective['score']})" + \
-            f"|{str_key_results[0]}" + \
-            f"|{str_key_results[1]}" + \
-            f"|{str_key_results[2]}" + \
-            f"|{comment}" + \
-            '|\n'
+        if is_more_detail:
+            texts[self.config.NOTION] += f"|{objective['year']}" + \
+                f"|{objective['quarter']}" + \
+                f"|{objective['priority']}" + \
+                f"|{objective_title} ({objective['score']})" + \
+                f"|{str_objective_remarks}" + \
+                f"|{str_objective_impression}" + \
+                f"|{str_key_results[0]}" + \
+                f"|{str_key_result_remarks[0]}" + \
+                f"|{str_key_result_impressions[0]}" + \
+                f"|{str_key_results[1]}" + \
+                f"|{str_key_result_remarks[1]}" + \
+                f"|{str_key_result_impressions[1]}" + \
+                f"|{str_key_results[2]}" + \
+                f"|{str_key_result_remarks[2]}" + \
+                f"|{str_key_result_impressions[2]}" + \
+                f"|{comment}" + \
+                '|\n'
+        else:
+            texts[self.config.NOTION] += f"|{objective['year']}" + \
+                f"|{objective['quarter']}" + \
+                f"|{objective['priority']}" + \
+                f"|{objective_title} ({objective['score']})" + \
+                f"|{str_key_results[0]}" + \
+                f"|{str_key_results[1]}" + \
+                f"|{str_key_results[2]}" + \
+                f"|{comment}" + \
+                '|\n'
 
         return texts
 
     """
     Objective の情報をテキスト追加する
     """
-    def add_objective_to_text_for_api(self, name, objective, texts):
+    def add_objective_to_text_for_api(self, name, objective, texts, is_more_detail):
         objective_title = ''.join(objective['objective'].splitlines())
         objective_title = f"[{objective_title}]({self.config.base_url}/key_result?objective_id={objective['id']})"
-        str_key_results = [
-            '--- (x.x)', '--- (x.x)', '--- (x.x)',
-        ]
+        str_objective_remarks = '' if objective['remarks'] is None else ''.join(objective['remarks'].splitlines())
+        str_objective_impression = '' if objective['impression'] is None else ''.join(objective['impression'].splitlines())
+        str_key_results = ['', '', '']
+        str_key_result_remarks = ['', '', '']
+        str_key_result_impressions = ['', '', '']
 
         for index, key_result in enumerate(objective['key_results']):
             k = key_result['key_result']
             s = key_result['score']
+            r = key_result['remarks']
+            i = key_result['impression']
 
             if (k is None) and (s == 0):
                 continue
 
-            if k is not None:
-                k = ''.join(k.splitlines())
+            k = '' if k is None else ''.join(k.splitlines())
+            r = '' if r is None else ''.join(r.splitlines())
+            i = '' if i is None else ''.join(i.splitlines())
 
             str_key_results[index] = f"{k} ({key_result['score']})"
+            str_key_result_remarks[index] = f"{r}"
+            str_key_result_impressions[index] = f"{i}"
 
         comment = ''
         count = 1
@@ -236,16 +276,36 @@ class MyOkr():
                 comment += ''.join(c['comment'].splitlines())
             count += 1
 
-        texts[self.config.NOTION] += f"|{name}" + \
-            f"|{objective['year']}" + \
-            f"|{objective['quarter']}" + \
-            f"|{objective['priority']}" + \
-            f"|{objective_title} ({objective['score']})" + \
-            f"|{str_key_results[0]}" + \
-            f"|{str_key_results[1]}" + \
-            f"|{str_key_results[2]}" + \
-            f"|{comment}" + \
-            '|\n'
+        if is_more_detail:
+            texts[self.config.NOTION] += f"|{name}" + \
+                f"|{objective['year']}" + \
+                f"|{objective['quarter']}" + \
+                f"|{objective['priority']}" + \
+                f"|{objective_title} ({objective['score']})" + \
+                f"|{str_objective_remarks}" + \
+                f"|{str_objective_impression}" + \
+                f"|{str_key_results[0]}" + \
+                f"|{str_key_result_remarks[0]}" + \
+                f"|{str_key_result_impressions[0]}" + \
+                f"|{str_key_results[1]}" + \
+                f"|{str_key_result_remarks[1]}" + \
+                f"|{str_key_result_impressions[1]}" + \
+                f"|{str_key_results[2]}" + \
+                f"|{str_key_result_remarks[2]}" + \
+                f"|{str_key_result_impressions[2]}" + \
+                f"|{comment}" + \
+                '|\n'
+        else:
+            texts[self.config.NOTION] += f"|{name}" + \
+                f"|{objective['year']}" + \
+                f"|{objective['quarter']}" + \
+                f"|{objective['priority']}" + \
+                f"|{objective_title} ({objective['score']})" + \
+                f"|{str_key_results[0]}" + \
+                f"|{str_key_results[1]}" + \
+                f"|{str_key_results[2]}" + \
+                f"|{comment}" + \
+                '|\n'
 
         return texts
 

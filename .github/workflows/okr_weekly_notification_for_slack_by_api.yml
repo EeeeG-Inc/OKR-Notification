@@ -20,6 +20,13 @@ on:
         - '3'
         - '4'
         - '5'
+      is_more_detail:
+        type: choice
+        description: is_more_detail
+        required: true
+        options:
+        - '0'
+        - '1'
   schedule:
     # 火 0:00 (UTC) -> 火 10:00 (JST)
     - cron: "0 0 * * 1"
@@ -47,4 +54,4 @@ jobs:
           CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION: ${{ secrets.CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
         # schedule でトリガーされたときはデフォルト値が渡される
-        run: python okr_weekly_notification_for_slack_by_api.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }}
+        run: python okr_weekly_notification_for_slack_by_api.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }}

@@ -20,6 +20,13 @@ on:
         - '3'
         - '4'
         - '5'
+      is_more_detail:
+        type: choice
+        description: is_more_detail
+        required: true
+        options:
+        - '0'
+        - '1'
       user_id:
         type: choice
         description: user_id
@@ -57,4 +64,4 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.user_id }}
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} ${{ github.event.inputs.user_id }}
