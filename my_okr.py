@@ -174,66 +174,35 @@ class MyOkr():
     Objective の情報をテキスト追加する
     """
     def add_objective_to_text_for_webhook(self, objective, texts, is_more_detail):
-        objective_title = ''.join(objective['objective'].splitlines())
-        objective_title = f"[{objective_title}]({self.config.base_url}/key_result?objective_id={objective['id']})"
-        str_objective_remarks = '' if objective['remarks'] is None else ''.join(objective['remarks'].splitlines())
-        str_objective_impression = '' if objective['impression'] is None else ''.join(objective['impression'].splitlines())
-        str_key_results = ['', '', '']
-        str_key_result_remarks = ['', '', '']
-        str_key_result_impressions = ['', '', '']
-        for index, key_result in enumerate(objective['key_results']):
-            k = key_result['key_result']
-            s = key_result['score']
-            r = key_result['remarks']
-            i = key_result['impression']
-
-            if (k is None) and (s == 0):
-                continue
-
-            k = '' if k is None else ''.join(k.splitlines())
-            r = '' if r is None else ''.join(r.splitlines())
-            i = '' if i is None else ''.join(i.splitlines())
-
-            str_key_results[index] = f"{k} ({key_result['score']})"
-            str_key_result_remarks[index] = f"{r}"
-            str_key_result_impressions[index] = f"{i}"
-
-        comment = ''
-        count = 1
-        for c in objective['comments']:
-            # 表示するコメントは 3 件までとする
-            if count <= 3:
-                comment += f'【コメント{count}】'
-                comment += ''.join(c['comment'].splitlines())
-            count += 1
+        okr = self.__get_okr_info(objective)
 
         if is_more_detail:
             texts[self.config.NOTION] += f"|{objective['year']}" + \
                 f"|{objective['quarter']}" + \
                 f"|{objective['priority']}" + \
-                f"|{objective_title} ({objective['score']})" + \
-                f"|{str_objective_remarks}" + \
-                f"|{str_objective_impression}" + \
-                f"|{str_key_results[0]}" + \
-                f"|{str_key_result_remarks[0]}" + \
-                f"|{str_key_result_impressions[0]}" + \
-                f"|{str_key_results[1]}" + \
-                f"|{str_key_result_remarks[1]}" + \
-                f"|{str_key_result_impressions[1]}" + \
-                f"|{str_key_results[2]}" + \
-                f"|{str_key_result_remarks[2]}" + \
-                f"|{str_key_result_impressions[2]}" + \
-                f"|{comment}" + \
+                f"|{okr['objective_title']} ({objective['score']})" + \
+                f"|{okr['str_objective_remarks']}" + \
+                f"|{okr['str_objective_impression']}" + \
+                f"|{okr['str_key_results'][0]}" + \
+                f"|{okr['str_key_result_remarks'][0]}" + \
+                f"|{okr['str_key_result_impressions'][0]}" + \
+                f"|{okr['str_key_results'][1]}" + \
+                f"|{okr['str_key_result_remarks'][1]}" + \
+                f"|{okr['str_key_result_impressions'][1]}" + \
+                f"|{okr['str_key_results'][2]}" + \
+                f"|{okr['str_key_result_remarks'][2]}" + \
+                f"|{okr['str_key_result_impressions'][2]}" + \
+                f"|{okr['comment']}" + \
                 '|\n'
         else:
             texts[self.config.NOTION] += f"|{objective['year']}" + \
                 f"|{objective['quarter']}" + \
                 f"|{objective['priority']}" + \
-                f"|{objective_title} ({objective['score']})" + \
-                f"|{str_key_results[0]}" + \
-                f"|{str_key_results[1]}" + \
-                f"|{str_key_results[2]}" + \
-                f"|{comment}" + \
+                f"|{okr['objective_title']} ({objective['score']})" + \
+                f"|{okr['str_key_results'][0]}" + \
+                f"|{okr['str_key_results'][1]}" + \
+                f"|{okr['str_key_results'][2]}" + \
+                f"|{okr['comment']}" + \
                 '|\n'
 
         return texts
@@ -242,69 +211,37 @@ class MyOkr():
     Objective の情報をテキスト追加する
     """
     def add_objective_to_text_for_api(self, name, objective, texts, is_more_detail):
-        objective_title = ''.join(objective['objective'].splitlines())
-        objective_title = f"[{objective_title}]({self.config.base_url}/key_result?objective_id={objective['id']})"
-        str_objective_remarks = '' if objective['remarks'] is None else ''.join(objective['remarks'].splitlines())
-        str_objective_impression = '' if objective['impression'] is None else ''.join(objective['impression'].splitlines())
-        str_key_results = ['', '', '']
-        str_key_result_remarks = ['', '', '']
-        str_key_result_impressions = ['', '', '']
-
-        for index, key_result in enumerate(objective['key_results']):
-            k = key_result['key_result']
-            s = key_result['score']
-            r = key_result['remarks']
-            i = key_result['impression']
-
-            if (k is None) and (s == 0):
-                continue
-
-            k = '' if k is None else ''.join(k.splitlines())
-            r = '' if r is None else ''.join(r.splitlines())
-            i = '' if i is None else ''.join(i.splitlines())
-
-            str_key_results[index] = f"{k} ({key_result['score']})"
-            str_key_result_remarks[index] = f"{r}"
-            str_key_result_impressions[index] = f"{i}"
-
-        comment = ''
-        count = 1
-        for c in objective['comments']:
-            # 表示するコメントは 3 件までとする
-            if count <= 3:
-                comment += f'【コメント{count}】'
-                comment += ''.join(c['comment'].splitlines())
-            count += 1
+        okr = self.__get_okr_info(objective)
 
         if is_more_detail:
             texts[self.config.NOTION] += f"|{name}" + \
                 f"|{objective['year']}" + \
                 f"|{objective['quarter']}" + \
                 f"|{objective['priority']}" + \
-                f"|{objective_title} ({objective['score']})" + \
-                f"|{str_objective_remarks}" + \
-                f"|{str_objective_impression}" + \
-                f"|{str_key_results[0]}" + \
-                f"|{str_key_result_remarks[0]}" + \
-                f"|{str_key_result_impressions[0]}" + \
-                f"|{str_key_results[1]}" + \
-                f"|{str_key_result_remarks[1]}" + \
-                f"|{str_key_result_impressions[1]}" + \
-                f"|{str_key_results[2]}" + \
-                f"|{str_key_result_remarks[2]}" + \
-                f"|{str_key_result_impressions[2]}" + \
-                f"|{comment}" + \
+                f"|{okr['objective_title']} ({objective['score']})" + \
+                f"|{okr['str_objective_remarks']}" + \
+                f"|{okr['str_objective_impression']}" + \
+                f"|{okr['str_key_results'][0]}" + \
+                f"|{okr['str_key_result_remarks'][0]}" + \
+                f"|{okr['str_key_result_impressions'][0]}" + \
+                f"|{okr['str_key_results'][1]}" + \
+                f"|{okr['str_key_result_remarks'][1]}" + \
+                f"|{okr['str_key_result_impressions'][1]}" + \
+                f"|{okr['str_key_results'][2]}" + \
+                f"|{okr['str_key_result_remarks'][2]}" + \
+                f"|{okr['str_key_result_impressions'][2]}" + \
+                f"|{okr['comment']}" + \
                 '|\n'
         else:
             texts[self.config.NOTION] += f"|{name}" + \
                 f"|{objective['year']}" + \
                 f"|{objective['quarter']}" + \
                 f"|{objective['priority']}" + \
-                f"|{objective_title} ({objective['score']})" + \
-                f"|{str_key_results[0]}" + \
-                f"|{str_key_results[1]}" + \
-                f"|{str_key_results[2]}" + \
-                f"|{comment}" + \
+                f"|{okr['objective_title']} ({objective['score']})" + \
+                f"|{okr['str_key_results'][0]}" + \
+                f"|{okr['str_key_results'][1]}" + \
+                f"|{okr['str_key_results'][2]}" + \
+                f"|{okr['comment']}" + \
                 '|\n'
 
         return texts
@@ -319,3 +256,47 @@ class MyOkr():
                 texts[id] = text
 
         return texts
+
+    def __get_okr_info(self, objective):
+        objective_title = ''.join(objective['objective'].splitlines())
+        objective_title = f"[{objective_title}]({self.config.base_url}/key_result?objective_id={objective['id']})"
+        str_objective_remarks = '' if objective['remarks'] is None else ''.join(objective['remarks'].splitlines())
+        str_objective_impression = '' if objective['impression'] is None else ''.join(objective['impression'].splitlines())
+        str_key_results = ['', '', '']
+        str_key_result_remarks = ['', '', '']
+        str_key_result_impressions = ['', '', '']
+        for index, key_result in enumerate(objective['key_results']):
+            k = key_result['key_result']
+            s = key_result['score']
+            r = key_result['remarks']
+            i = key_result['impression']
+
+            if (k is None) and (s == 0):
+                continue
+
+            k = '' if k is None else ''.join(k.splitlines())
+            r = '' if r is None else ''.join(r.splitlines())
+            i = '' if i is None else ''.join(i.splitlines())
+
+            str_key_results[index] = f"{k} ({key_result['score']})"
+            str_key_result_remarks[index] = f"{r}"
+            str_key_result_impressions[index] = f"{i}"
+
+        comment = ''
+        count = 1
+        for c in objective['comments']:
+            # 表示するコメントは 3 件までとする
+            if count <= 3:
+                comment += f'【コメント{count}】'
+                comment += ''.join(c['comment'].splitlines())
+            count += 1
+
+        return {
+            'objective_title': objective_title,
+            'str_objective_remarks': str_objective_remarks,
+            'str_objective_impression': str_objective_impression,
+            'str_key_results': str_key_results,
+            'str_key_result_remarks': str_key_result_remarks,
+            'str_key_result_impressions': str_key_result_impressions,
+            'comment': comment,
+        }
