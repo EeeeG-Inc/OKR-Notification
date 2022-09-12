@@ -29,7 +29,7 @@ on:
         - '1'
   schedule:
     # 火 0:00 (UTC) -> 火 10:00 (JST)
-    - cron: "0 0 * * 1"
+    - cron: "0 0 * * 2"
 
 jobs:
   okr_weekly_notification_for_slack_by_api:
