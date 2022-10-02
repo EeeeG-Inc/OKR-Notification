@@ -27,7 +27,7 @@ on:
         options:
         - '0'
         - '1'
-      user_id:
+      user_group:
         type: choice
         description: user_group
         required: false
@@ -58,7 +58,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run Group ikeda
-        if: ${{ github.event.inputs.user_id }} == 'ikeda'
+        if: ${{ github.event.inputs.user_group == 'ikeda' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           BASE_URL: ${{ secrets.BASE_URL }}
@@ -70,7 +70,7 @@ jobs:
           python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 3 ${{ github.event.inputs.is_include_full_year || '0' }}
           python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 4 ${{ github.event.inputs.is_include_full_year || '0' }}
       - name: Run Group katakabe
-        if: ${{ github.event.inputs.user_id }} == 'katakabe'
+        if: ${{ github.event.inputs.user_group == 'katakabe' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           BASE_URL: ${{ secrets.BASE_URL }}
@@ -82,7 +82,7 @@ jobs:
           python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 6 ${{ github.event.inputs.is_include_full_year || '0' }}
           python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 7 ${{ github.event.inputs.is_include_full_year || '0' }}
       - name: Run Group seki
-        if: ${{ github.event.inputs.user_id }} == 'seki'
+        if: ${{ github.event.inputs.user_group == 'seki' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           BASE_URL: ${{ secrets.BASE_URL }}
