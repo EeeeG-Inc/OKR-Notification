@@ -30,7 +30,7 @@ on:
       user_group:
         type: choice
         description: user_group
-        required: false
+        required: true
         options:
         - 'ikeda'
         - 'katakabe'
@@ -40,8 +40,8 @@ on:
         description: is_include_full_year
         required: true
         options:
-        - '0'
         - '1'
+        - '0'
 
 jobs:
   okr_weekly_notification_for_slack_by_webhook:

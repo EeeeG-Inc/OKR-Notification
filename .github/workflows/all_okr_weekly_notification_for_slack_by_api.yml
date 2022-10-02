@@ -1,4 +1,4 @@
-name: okr_weekly_notification_for_slack_by_webhook
+name: all_okr_weekly_notification_for_slack_by_api
 
 on:
   workflow_dispatch:
@@ -27,31 +27,19 @@ on:
         options:
         - '0'
         - '1'
-      user_id:
-        type: choice
-        description: user_id
-        required: false
-        options:
-        - '2'
-        - '3'
-        - '4'
-        - '5'
-        - '6'
-        - '7'
-        - '8'
-        - '9'
-        - '10'
-        - '11'
       is_include_full_year:
         type: choice
         description: is_include_full_year
         required: true
         options:
-        - '0'
         - '1'
+        - '0'
+  schedule:
+    # 火 0:00 (UTC) -> 火 10:00 (JST)
+    - cron: "0 0 * * 2"
 
 jobs:
-  okr_weekly_notification_for_slack_by_webhook:
+  okr_weekly_notification_for_slack_by_api:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -64,11 +52,13 @@ jobs:
         run: python -V
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Run okr_weekly_notification_for_slack_by_webhook.py
+      - name: Run okr_weekly_notification_for_slack_by_api.py
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           BASE_URL: ${{ secrets.BASE_URL }}
-          WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
-          WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          CHANNEL_ID_DEFAULT: ${{ secrets.CHANNEL_ID_DEFAULT }}
+          CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION: ${{ secrets.CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} ${{ github.event.inputs.user_id }} ${{ github.event.inputs.is_include_full_year || '0' }}
+        # schedule でトリガーされたときはデフォルト値が渡される
+        run: python okr_weekly_notification_for_slack_by_api.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} ${{ github.event.inputs.is_include_full_year || '0' }}
