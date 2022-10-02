@@ -62,7 +62,7 @@ jobs:
         run: python -V
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Run For EeeeG (id 2)
+      - name: Run For EeeeG
         if: ${{ github.event.inputs.user_name == 'eeeeg' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
@@ -70,8 +70,9 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 2 ${{ github.event.inputs.is_include_full_year || '0' }}
-      - name: Run For Sys (id 3)
+          USER_ID: 2
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID }} ${{ github.event.inputs.is_include_full_year }}
+      - name: Run For Sys
         if: ${{ github.event.inputs.user_name == 'sys' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
@@ -79,8 +80,9 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 3 ${{ github.event.inputs.is_include_full_year || '0' }}
-      - name: Run For Ikeda (id 4)
+          USER_ID: 3
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID }} ${{ github.event.inputs.is_include_full_year }}
+      - name: Run For Ikeda
         if: ${{ github.event.inputs.user_name == 'ikeda' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
@@ -88,8 +90,9 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 4 ${{ github.event.inputs.is_include_full_year || '0' }}
-      - name: Run For Katakabe (id 5)
+          USER_ID: 4
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID }} ${{ github.event.inputs.is_include_full_year }}
+      - name: Run For Katakabe
         if: ${{ github.event.inputs.user_name == 'katakabe' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
@@ -97,8 +100,9 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 5 ${{ github.event.inputs.is_include_full_year || '0' }}
-      - name: Run For Sales (id 6)
+          USER_ID: 5
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID }} ${{ github.event.inputs.is_include_full_year }}
+      - name: Run For Sales
         if: ${{ github.event.inputs.user_name == 'sales' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
@@ -106,8 +110,9 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 6 ${{ github.event.inputs.is_include_full_year || '0' }}
-      - name: Run For HR (id 7)
+          USER_ID: 6
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID }} ${{ github.event.inputs.is_include_full_year }}
+      - name: Run For HR
         if: ${{ github.event.inputs.user_name == 'hr' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
@@ -115,8 +120,9 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 7 ${{ github.event.inputs.is_include_full_year || '0' }}
-      - name: Run For Design (id 10)
+          USER_ID: 7
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID }} ${{ github.event.inputs.is_include_full_year }}
+      - name: Run For Design
         if: ${{ github.event.inputs.user_name == 'design' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
@@ -124,8 +130,9 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 10 ${{ github.event.inputs.is_include_full_year || '0' }}
-      - name: Run For Seki (id 11)
+          USER_ID: 10
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID }} ${{ github.event.inputs.is_include_full_year }}
+      - name: Run For Seki
         if: ${{ github.event.inputs.user_name == 'seki' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
@@ -133,4 +140,5 @@ jobs:
           WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 11 ${{ github.event.inputs.is_include_full_year || '0' }}
+          USER_ID: 11
+        run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID }} ${{ github.event.inputs.is_include_full_year }}
