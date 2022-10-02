@@ -33,6 +33,8 @@ on:
         required: false
         options:
         - 'ikeda'
+        - 'katakabe'
+        - 'seki'
       is_include_full_year:
         type: choice
         description: is_include_full_year
@@ -67,3 +69,26 @@ jobs:
           python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 2 ${{ github.event.inputs.is_include_full_year || '0' }}
           python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 3 ${{ github.event.inputs.is_include_full_year || '0' }}
           python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 4 ${{ github.event.inputs.is_include_full_year || '0' }}
+      - name: Run Group katakabe
+        if: ${{ github.event.inputs.user_id }} == 'katakabe'
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
+          WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
+          IS_DEBUG: ${{ secrets.IS_DEBUG }}
+        run: |
+          python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 5 ${{ github.event.inputs.is_include_full_year || '0' }}
+          python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 6 ${{ github.event.inputs.is_include_full_year || '0' }}
+          python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 7 ${{ github.event.inputs.is_include_full_year || '0' }}
+      - name: Run Group seki
+        if: ${{ github.event.inputs.user_id }} == 'seki'
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
+          WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
+          IS_DEBUG: ${{ secrets.IS_DEBUG }}
+        run: |
+          python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 10 ${{ github.event.inputs.is_include_full_year || '0' }}
+          python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} 11 ${{ github.event.inputs.is_include_full_year || '0' }}
