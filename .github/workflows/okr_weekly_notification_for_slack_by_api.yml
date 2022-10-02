@@ -27,6 +27,13 @@ on:
         options:
         - '0'
         - '1'
+      is_include_full_year:
+        type: choice
+        description: is_include_full_year
+        required: true
+        options:
+        - '0'
+        - '1'
   schedule:
     # 火 0:00 (UTC) -> 火 10:00 (JST)
     - cron: "0 0 * * 2"
@@ -54,4 +61,4 @@ jobs:
           CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION: ${{ secrets.CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
         # schedule でトリガーされたときはデフォルト値が渡される
-        run: python okr_weekly_notification_for_slack_by_api.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }}
+        run: python okr_weekly_notification_for_slack_by_api.py ${{ github.event.inputs.year || '2022' }} ${{ github.event.inputs.quarter_id || '4' }} ${{ github.event.inputs.is_more_detail || '0' }} ${{ github.event.inputs.is_include_full_year || '0' }}

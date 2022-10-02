@@ -135,7 +135,7 @@ class MyOkr():
         }))
 
     """
-    メッセージ初期化
+    メッセージ初期化 (Webhook)
     """
     def init_text_for_webhook(self, name, is_plaintext, target, is_more_detail):
         text = ''
@@ -155,7 +155,7 @@ class MyOkr():
         return text
 
     """
-    メッセージ初期化
+    メッセージ初期化 (API)
     """
     def init_text_for_api(self, target, is_more_detail):
         text = ''

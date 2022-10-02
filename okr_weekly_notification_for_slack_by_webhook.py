@@ -3,11 +3,12 @@ import sys
 
 
 class OkrWeeklyNotificationForSlackByWebhook():
-    def __init__(self, year, quarter_id, is_more_detail, user_id):
+    def __init__(self, year, quarter_id, is_more_detail, user_id, is_include_full_year):
         self.year = year
         self.quarter_id = quarter_id
         self.is_more_detail = is_more_detail
         self.user_id = user_id
+        self.is_include_full_year = is_include_full_year
 
     def run(self):
         okr = MyOkr()
@@ -17,6 +18,7 @@ class OkrWeeklyNotificationForSlackByWebhook():
             'quarter_id': self.quarter_id,
             'user_id': self.user_id,
             'is_archived': '0',
+            'is_include_full_year': self.is_include_full_year
         })
 
         for name, objective in result['objectives'].items():
@@ -24,6 +26,8 @@ class OkrWeeklyNotificationForSlackByWebhook():
 
             if texts is not None:
                 okr.slack_post_via_webhook(None, texts[okr.config.NOTION], 'Weekly OKR', ':bar_chart:', okr.config.webhook_urls['notion'])
+            else:
+                print('このユーザは OKR を設定していません' )
 
         print('Slack Post About Weekly OKR Done!')
 
@@ -33,6 +37,7 @@ input = {
     'quarter_id': None,
     'is_more_detail': False,
     'user_id': None,
+    'is_include_full_year': False,
 }
 
 for index, arg in enumerate(sys.argv):
@@ -48,6 +53,8 @@ for index, arg in enumerate(sys.argv):
     if index == 4:
         input['user_id'] = arg
 
+    if index == 5:
+        input['is_include_full_year'] = bool(arg)
 
-okr_weekly_notification_for_slack_by_webhook = OkrWeeklyNotificationForSlackByWebhook(input['year'], input['quarter_id'], input['is_more_detail'], input['user_id'])
+okr_weekly_notification_for_slack_by_webhook = OkrWeeklyNotificationForSlackByWebhook(input['year'], input['quarter_id'], input['is_more_detail'], input['user_id'], input['is_include_full_year'])
 okr_weekly_notification_for_slack_by_webhook.run()
