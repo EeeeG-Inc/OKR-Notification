@@ -175,10 +175,11 @@ class MyOkr():
     """
     def add_objective_to_text_for_webhook(self, objective, texts, is_more_detail):
         okr = self.__get_okr_info(objective)
+        str_quarter = self.__get_str_quarter(objective)
 
         if is_more_detail:
             texts[self.config.NOTION] += f"|{objective['year']}" + \
-                f"|{objective['quarter']}" + \
+                f"|{str_quarter}" + \
                 f"|{objective['priority']}" + \
                 f"|{okr['objective_title']} ({objective['score']})" + \
                 f"|{okr['str_objective_remarks']}" + \
@@ -212,11 +213,12 @@ class MyOkr():
     """
     def add_objective_to_text_for_api(self, name, objective, texts, is_more_detail):
         okr = self.__get_okr_info(objective)
+        str_quarter = self.__get_str_quarter(objective)
 
         if is_more_detail:
             texts[self.config.NOTION] += f"|{name}" + \
                 f"|{objective['year']}" + \
-                f"|{objective['quarter']}" + \
+                f"|{str_quarter}" + \
                 f"|{objective['priority']}" + \
                 f"|{okr['objective_title']} ({objective['score']})" + \
                 f"|{okr['str_objective_remarks']}" + \
@@ -300,3 +302,13 @@ class MyOkr():
             'str_key_result_impressions': str_key_result_impressions,
             'comment': comment,
         }
+
+    def __get_str_quarter(self, objective):
+        str_quarter = ""
+
+        if objective['quarter'] == 0:
+            str_quarter = '通年'
+        else:
+            str_quarter = f"{objective['quarter']}Q"
+
+        return str_quarter
