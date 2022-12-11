@@ -144,7 +144,7 @@ jobs:
           USER_ID: 11
         run: python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID }} ${{ github.event.inputs.is_include_full_year }}
       - name: Run For Inoue
-        if: ${{ github.event.inputs.user_name == 'seki' }}
+        if: ${{ github.event.inputs.user_name == 'inoue' }}
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           BASE_URL: ${{ secrets.BASE_URL }}
