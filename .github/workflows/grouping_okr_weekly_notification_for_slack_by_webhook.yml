@@ -35,6 +35,7 @@ on:
         - 'ikeda'
         - 'katakabe'
         - 'seki'
+        - 'inoue'
       is_include_full_year:
         type: choice
         description: is_include_full_year
@@ -96,7 +97,24 @@ jobs:
           WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
           USER_ID_DESIGN: 10
+          USER_ID_SALES: 6
           USER_ID_SEKI: 11
         run: |
           python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID_DESIGN }} ${{ github.event.inputs.is_include_full_year }}
+          python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID_SALES }} ${{ github.event.inputs.is_include_full_year }}
           python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID_SEKI }} ${{ github.event.inputs.is_include_full_year }}
+      - name: Run Group inoue
+        if: ${{ github.event.inputs.user_group == 'inoue' }}
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          WEBHOOK_URL_DEFAULT: ${{ secrets.WEBHOOK_URL_DEFAULT }}
+          WEBHOOK_URL_FOR_NOTION: ${{ secrets.WEBHOOK_URL_FOR_NOTION }}
+          IS_DEBUG: ${{ secrets.IS_DEBUG }}
+          USER_ID_DESIGN: 10
+          USER_ID_HR: 7
+          USER_ID_INOUE: 12
+        run: |
+          python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID_DESIGN }} ${{ github.event.inputs.is_include_full_year }}
+          python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID_HR }} ${{ github.event.inputs.is_include_full_year }}
+          python okr_weekly_notification_for_slack_by_webhook.py ${{ github.event.inputs.year }} ${{ github.event.inputs.quarter_id }} ${{ github.event.inputs.is_more_detail }} ${{ env.USER_ID_INOUE }} ${{ github.event.inputs.is_include_full_year }}
