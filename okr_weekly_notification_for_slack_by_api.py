@@ -37,10 +37,10 @@ input = {
 
 for index, arg in enumerate(sys.argv):
     if index == 1:
-        input['year'] = arg
+        input['year'] = None if arg == 'this_year_at_today' else arg
 
     if index == 2:
-        input['quarter_id'] = arg
+        input['quarter_id'] = None if arg == 'this_quarter_at_today' else arg
 
     if index == 3:
         input['is_more_detail'] = bool(arg)

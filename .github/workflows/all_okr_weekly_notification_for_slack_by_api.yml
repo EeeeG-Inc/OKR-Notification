@@ -7,7 +7,10 @@ on:
         type: choice
         description: year
         required: true
+        # 毎年追記すること
         options:
+        - 'this_year_at_today'
+        - '2023'
         - '2022'
         - '2021'
       quarter_id:
@@ -15,6 +18,7 @@ on:
         description: quarter_id
         required: true
         options:
+        - 'this_quarter_at_today'
         - '1'
         - '2'
         - '3'
@@ -60,8 +64,8 @@ jobs:
           CHANNEL_ID_DEFAULT: ${{ secrets.CHANNEL_ID_DEFAULT }}
           CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION: ${{ secrets.CHANNEL_ID_OKR_WEEKLY_NOTIFICATION_FOR_NOTION }}
           IS_DEBUG: ${{ secrets.IS_DEBUG }}
-          DEFAULT_YEAR: '2022'
-          DEFAULT_QUARTER_ID: '5'
+          DEFAULT_YEAR: 'this_year_at_today'
+          DEFAULT_QUARTER_ID: 'this_quarter_at_today'
           DEFAULT_IS_MORE_DETAIL: '0'
           DEFAULT_IS_INCLUDE_FULL_YEAR: '1'
 

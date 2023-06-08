@@ -7,7 +7,10 @@ on:
         type: choice
         description: year
         required: true
+        # 毎年追記すること
         options:
+        - 'this_year_at_today'
+        - '2023'
         - '2022'
         - '2021'
       quarter_id:
@@ -15,6 +18,7 @@ on:
         description: quarter_id
         required: true
         options:
+        - 'this_quarter_at_today'
         - '1'
         - '2'
         - '3'
