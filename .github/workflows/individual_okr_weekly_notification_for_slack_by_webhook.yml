@@ -8,6 +8,7 @@ on:
         description: year
         required: true
         options:
+        - '2023'
         - '2022'
         - '2021'
       quarter_id:
